@@ -14,7 +14,7 @@
             <img alt="example" style="width: 100%" :src="previewImage" />
           </a-modal>
           <p>欢迎您，新用户</p>
-          <p>Student</p>
+          <p class="p">{{ name }}</p>
         </div>
         <div class="left_footer">
           <h3>个人绩效</h3><hr />
@@ -28,7 +28,7 @@
 
         <a-form class="form" :model="formState" name="basic" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }" autocomplete="off" @finish="onFinish">
           <a-form-item label="用户名" name="username" :rules="[{ required: true, message: 'Please input your username!' }]">
-            <a-input v-model:value="formState.username" />
+            <a-input v-model:value="formState.username" disabled="disabled" />
           </a-form-item>
 
           <a-form-item label="手机号" name="phone" :rules="[{ required: true, message: 'Please input your Phone!' }]">
@@ -55,11 +55,21 @@
   import { PlusOutlined } from '@ant-design/icons-vue';
   import { ref } from 'vue';
   import { reactive } from 'vue';
+  import { updata } from '../api/test/index';
   import type { UploadProps } from 'ant-design-vue';
+  import { mainStore } from '../store';
+  import { message } from 'ant-design-vue';
+  const mainStoreI = mainStore();
 
   const visible = ref<boolean>(false);
+  const name = ref('');
   const showModal = () => {
     visible.value = true;
+    // formState = mainStoreI.total_date;
+    Object.keys(formState).map(key => {
+      formState[key] = mainStoreI.total_date[key];
+    });
+    name.value = mainStoreI.total_date.name;
   };
 
   const handleOk = (e: MouseEvent) => {
@@ -110,7 +120,19 @@
     phone: '',
   });
   const onFinish = (values: any) => {
-    console.log('Success:', values);
+    console.log(values);
+
+    updata(values).then((res: any) => {
+      if (res.data.code == 200) {
+        mainStoreI.$patch(state => {
+          state.total_date.username = values.username;
+          state.total_date.phone = values.phone;
+          state.total_date.password = values.newpassword;
+        });
+        visible.value = false;
+        message.success(res.data.message);
+      }
+    });
   };
 
   // const onFinishFailed = (errorInfo: any) => {
@@ -137,6 +159,10 @@
         // background-color: red;
         text-align: center;
         margin: 20px;
+        .p {
+          font-size: 20px;
+          color: black;
+        }
       }
       .left_footer {
         height: 43%;

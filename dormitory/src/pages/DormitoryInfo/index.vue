@@ -9,38 +9,32 @@
               宿舍楼
               <a-space class="right_1_3">
                 <a-select ref="select" v-model:value="value1" style="width: 220px" @change="handleChange">
-                  <a-select-option value="jack1">和园一号</a-select-option>
-                  <a-select-option value="jack">和园二号</a-select-option>
-                  <a-select-option value="lucy">和园三号</a-select-option>
-                  <a-select-option value="Yiminghe">和园四号</a-select-option>
+                  <a-select-option value="1">和园一号</a-select-option>
+                  <a-select-option value="2">和园二号</a-select-option>
+                  <a-select-option value="3">和园三号</a-select-option>
+                  <a-select-option value="4">和园四号</a-select-option>
                 </a-select>
               </a-space>
             </div>
             <div>
               楼层
               <a-space class="right_1_3">
-                <a-select ref="select" v-model:value="value1" style="width: 220px" @change="handleChange">
-                  <a-select-option value="jack1">和园一号</a-select-option>
-                  <a-select-option value="jack">和园二号</a-select-option>
-                  <a-select-option value="lucy">和园三号</a-select-option>
-                  <a-select-option value="Yiminghe">和园四号</a-select-option>
+                <a-select ref="select" v-model:value="value2" style="width: 220px" @change="handleChange2">
+                  <a-select-option v-for="(item, index) in datas" :key="index" :value="item.floorId">{{ item.floorId }}层</a-select-option>
                 </a-select>
               </a-space>
             </div>
             <div>
               房间
               <a-space class="right_1_3">
-                <a-select ref="select" v-model:value="value1" style="width: 220px" @change="handleChange">
-                  <a-select-option value="jack1">和园一号</a-select-option>
-                  <a-select-option value="jack">和园二号</a-select-option>
-                  <a-select-option value="lucy">和园三号</a-select-option>
-                  <a-select-option value="Yiminghe">和园四号</a-select-option>
+                <a-select ref="select" v-model:value="value3" style="width: 220px">
+                  <a-select-option v-for="(item, index) in roomId" :key="index" :value="item">{{ item }}</a-select-option>
                 </a-select>
               </a-space>
             </div>
           </div>
           <div>
-            <a-button type="primary" shape="round">检索宿舍</a-button>
+            <a-button type="primary" shape="round" @click="getdata">检索宿舍</a-button>
           </div>
         </div>
         <div class="top_2_3">
@@ -50,7 +44,7 @@
             </div>
             <div>
               <p class="top_2_1_1">房间号</p>
-              <p class="top_2_1_2">101</p>
+              <p class="top_2_1_2">{{ lowdata.roomId }}</p>
             </div>
           </div>
           <div class="top_2_1">
@@ -59,7 +53,7 @@
             </div>
             <div>
               <p class="top_2_1_1">所在楼层</p>
-              <p class="top_2_1_2">1层</p>
+              <p class="top_2_1_2">{{ lowdata.floorId }}层</p>
             </div>
           </div>
           <div class="top_2_1">
@@ -68,7 +62,7 @@
             </div>
             <div>
               <p class="top_2_1_1">宿舍楼</p>
-              <p class="top_2_1_2">和园一号</p>
+              <p class="top_2_1_2">{{ lowdata.buildingId }}</p>
             </div>
           </div>
           <div class="top_2_1">
@@ -76,8 +70,8 @@
               <user-delete-outlined :style="{ fontSize: '100px', color: '#08c' }" />
             </div>
             <div>
-              <p class="top_2_1_1">宿舍最大人数</p>
-              <p class="top_2_1_2">6</p>
+              <p class="top_2_1_1">宿舍人数</p>
+              <p class="top_2_1_2">{{ lowdata.lengths }}</p>
             </div>
           </div>
         </div>
@@ -86,12 +80,12 @@
     <div class="footer">
       <h2>宿舍成员</h2>
       <div class="footer_2">
-        <a-table :columns="columns" :data-source="data" :style="{ width: '100%' }" :pagination="false">
-          <template #headerCell="{ column }">
+        <a-table :columns="columns" :data-source="dataSource" :style="{ width: '100%' }" :pagination="false">
+          <!-- <template #headerCell="{ column }">
             <template v-if="column.key === 'name'">
               <span>姓名</span>
             </template>
-          </template>
+          </template> -->
 
           <template #bodyCell="{ column, record }">
             <template v-if="column.key === 'name'">
@@ -99,11 +93,11 @@
                 {{ record.name }}
               </a>
             </template>
-            <template v-if="column.key === 'room'">
+            <!-- <template v-if="column.key === 'room'">
               <a>
                 {{ record.room }}
               </a>
-            </template>
+            </template> -->
           </template>
         </a-table>
       </div>
@@ -164,7 +158,8 @@
 </template>
 <script lang="ts" setup>
   import { formateDate } from '@/layout/time';
-  import { ref, onMounted, reactive } from 'vue';
+  import { ref, onMounted, reactive, Ref } from 'vue';
+  import { floormanagement, dormitoryInfos } from '../../api/test/index';
   import { HomeOutlined, DeploymentUnitOutlined, DatabaseOutlined, UserDeleteOutlined } from '@ant-design/icons-vue';
   const nowTime = ref('');
   onMounted(() => {
@@ -173,70 +168,87 @@
     });
   });
 
-  const value1 = ref('Yiminghe');
+  const value1 = ref('');
+  const value2 = ref('');
+  const value3 = ref('');
+  const datas = ref<any>('');
+  const test = ref<any>([]);
+  const roomId = ref('');
+  //选择宿舍楼
   const handleChange = (value: string) => {
     console.log(`selected ${value}`);
+    value2.value = '';
+    value3.value = '';
+    test.value = [];
+    roomId.value = '';
+    floormanagement(Number(value1.value)).then((res: any) => {
+      console.log(res.data.message, 'asd');
+      res.data.message.forEach((item: { number: any }) => {
+        // test.value = item.number;
+        test.value.push(JSON.parse(JSON.stringify(item.number)).split(','));
+      });
+      datas.value = res.data.message;
+    });
+  };
+  //选择楼层
+  const handleChange2 = (value: string) => {
+    value3.value = '';
+    test.value.forEach((item: any, index: any) => {
+      // console.log(item, value, index, 'asd');
+      if (value == index + 1) {
+        roomId.value = item;
+      }
+    });
+  };
+  //检索宿舍情况
+  // const info = reactive({ dormitory: 1, roomId: 101 });
+  const info = reactive({
+    dormitory: '',
+    roomId: '',
+  });
+
+  interface DataItem {
+    name: string;
+    username: string;
+    phone: string;
+    checkTime: string;
+  }
+  const dataSource: Ref<DataItem[]> = ref([]);
+  const lowdata = reactive({ roomId: '', floorId: '', buildingId: '', lengths: 0 });
+  const getdata = () => {
+    info.dormitory = value1.value;
+    info.roomId = value3.value;
+    // console.log(info);
+    dormitoryInfos(info).then((res: any) => {
+      console.log(res.data.message);
+      dataSource.value = res.data.message;
+      lowdata.lengths = dataSource.value.length;
+    });
+    lowdata.roomId = value3.value;
+    lowdata.floorId = value2.value;
+    lowdata.buildingId = '和园' + value1.value + '号';
   };
 
   const columns = [
     {
-      name: '姓名',
+      title: '姓名',
       dataIndex: 'name',
       key: 'name',
     },
     {
       title: '学号',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'studentId',
+      key: 'studentId',
     },
     {
       title: '电话号',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'phone',
+      key: 'phone',
     },
     {
       title: '入住时间',
-      key: 'age',
-      dataIndex: 'age',
-    },
-  ];
-
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-    },
-    {
-      key: '4',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-    },
-    {
-      key: '5',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-    },
-    {
-      key: '6',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
+      key: 'checkTime',
+      dataIndex: 'checkTime',
     },
   ];
 
@@ -252,20 +264,17 @@
   const onFinish = (values: any) => {
     console.log('Success:', values);
   };
-
-  // const onFinishFailed = (errorInfo: any) => {
-  //   console.log('Failed:', errorInfo);
-  // };
 </script>
 <style lang="less" scoped>
   .all::-webkit-scrollbar {
     display: none;
   }
+
   .all {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     max-height: 100%; // 你可以设置固定或者最大最小高度
     overflow: hidden; // 隐藏超出部分
     overflow-y: scroll;
@@ -326,6 +335,7 @@
               font-size: 20px;
               color: gray;
             }
+
             .top_2_1_2 {
               font-size: 25px;
               font-weight: 550;
@@ -334,9 +344,11 @@
         }
       }
     }
+
     .footer {
       width: 100%;
       min-height: 50%;
+      // margin: 0 0 20px 0;
       //   background-color: red;
 
       h2 {
@@ -388,6 +400,7 @@
             /deep/.ant-col-offset-8 {
               margin-left: 94.333333%;
             }
+
             /deep/.ant-col-16 {
               max-width: 92.666667%;
             }

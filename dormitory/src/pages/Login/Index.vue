@@ -23,6 +23,8 @@
   import router from '@/router';
   import { login } from '../../api/test/index';
   import { reactive } from 'vue';
+  import { mainStore } from '../../store';
+  const mainStoreI = mainStore();
 
   interface FormState {
     username: string;
@@ -39,10 +41,13 @@
       console.log(res.data.data, 'qwe');
       if (res.data.code == 200) {
         console.log('Success:', values);
+        mainStoreI.changeState(res.data.data);
         sessionStorage.setItem('token', 'user');
+        //缓存菜单信息
+        sessionStorage.setItem('menuList', JSON.stringify(res.data.data.menuList));
         router.push('/layout');
       } else {
-        console.log('账号或者密码错误！');
+        console.log(res.data.message);
       }
     });
   };

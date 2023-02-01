@@ -4,72 +4,12 @@
       <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
         <div class="logo">寝室云平台</div>
         <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-          <a-menu-item key="1">
-            <router-link to="/fillinfo">
-              <user-outlined />
-              <span>概览</span>
+          <a-menu-item v-for="(item1, index1) in menuList" :key="index1">
+            <router-link :to="item1.url">
+              <!-- <user-outlined /> -->
+              <component :is="$icons[item1.icon]" />
+              <span>{{ item1.name }}</span>
               <!-- <router-link to="/test">概览</router-link> -->
-            </router-link>
-          </a-menu-item>
-
-          <a-menu-item key="2">
-            <router-link to="/getClock">
-              <video-camera-outlined />
-              <span>起床记录</span>
-            </router-link>
-          </a-menu-item>
-          <a-menu-item key="3">
-            <router-link to="/registration">
-              <video-camera-outlined />
-              <span>归宿记录</span>
-            </router-link>
-          </a-menu-item>
-          <a-menu-item key="4">
-            <router-link to="/clean">
-              <video-camera-outlined />
-              <span>打扫记录</span>
-            </router-link>
-          </a-menu-item>
-          <a-menu-item key="5">
-            <router-link to="/overview">
-              <video-camera-outlined />
-              <span>概览</span>
-            </router-link>
-          </a-menu-item>
-          <a-menu-item key="6">
-            <router-link to="/floorManagement">
-              <video-camera-outlined />
-              <span>楼层管理</span>
-            </router-link>
-          </a-menu-item>
-          <a-menu-item key="7">
-            <router-link to="/dormitoryInfo">
-              <video-camera-outlined />
-              <span>宿舍基本信息</span>
-            </router-link>
-          </a-menu-item>
-          <a-menu-item key="8">
-            <router-link to="/viewStudentInfo">
-              <video-camera-outlined />
-              <span>学生信息</span>
-            </router-link>
-          </a-menu-item>
-          <a-menu-item key="9">
-            <router-link to="/early">
-              <video-camera-outlined />
-              <span>起床记录</span>
-            </router-link>
-          </a-menu-item>
-          <a-menu-item key="10">
-            <router-link to="/studentsReturnlate">
-              <video-camera-outlined />
-              <span>归寝记录</span>
-            </router-link>
-          </a-menu-item>
-          <a-menu-item key="11">
-            <router-link to="/cleaningFrequency">
-              <video-camera-outlined />
-              <span>打扫记录</span>
             </router-link>
           </a-menu-item>
         </a-menu>
@@ -104,23 +44,40 @@
   </div>
 </template>
 <script lang="ts" setup>
-  import { ref } from 'vue';
-  import { UserOutlined, VideoCameraOutlined, MenuUnfoldOutlined, MenuFoldOutlined, FullscreenOutlined } from '@ant-design/icons-vue';
-  import router from '@/router';
+  import { ref, onMounted } from 'vue';
+  // import { UserOutlined, VideoCameraOutlined, MenuUnfoldOutlined, MenuFoldOutlined, FullscreenOutlined } from '@ant-design/icons-vue';
+  import { useRouter } from 'vue-router';
   import Models from '../components/Model.vue';
+
+  let $router = useRouter();
 
   const selectedKeys = ref<string[]>(['1']);
   const collapsed = ref<boolean>(false);
 
+  //获取缓存信息
+  let menuList = JSON.parse(sessionStorage.getItem('menuList') as any);
+
   //退出登录
   const quit = () => {
-    sessionStorage.removeItem('token');
-    router.push('/');
+    sessionStorage.clear(); //清空sessionStorage中所有信息
+    $router.push('/');
   };
+
+  onMounted(() => {
+    // const modules = import.meta.glob('../pages/*/*.vue');
+    //动态加载路由
+    menuList.forEach((h: any) => {
+      $router.addRoute('layout', {
+        path: h.url,
+        name: h.names,
+        component: () => import(`../pages${h.component}`),
+      });
+    });
+  });
 </script>
 <style lang="less" scoped>
   .layout {
-    width: 100%;
+    width: 100vw;
     height: 100vh;
 
     .a {

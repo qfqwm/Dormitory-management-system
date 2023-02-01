@@ -1,7 +1,7 @@
 <template>
   <div class="all">
     <div class="top">
-      <span>个人记录</span>
+      <span>管理概览</span>
       <a-space class="right_1_3">
         <a-select ref="select" v-model:value="value1" style="width: 220px" @change="handleChange">
           <a-select-option value="jack1">和园一号</a-select-option>

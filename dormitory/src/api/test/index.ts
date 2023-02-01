@@ -1,14 +1,25 @@
 // todo 实现封装一个axios
 import api from '@/utils/axios';
-import { GetAccountInfoModel } from './model';
+import { GetAccountInfoModel, updataModel, floormanagements, DormitoryInfos } from './model';
 
 enum Api {
-  // ACCOUNT_INFO = '/account/getAccountInfo',
-  // SESSION_TIMEOUT = '/user/sessionTimeout',
-  // TOKEN_EXPIRED = '/user/tokenExpired',
-  // 码表模糊查询
+  // 用户登录
   Login = '/user/login',
-}
-export const login = (object: object) => api.post<GetAccountInfoModel>(Api.Login, object);
+  Updata = '/user/updata',
 
-// export const selectCodeTable = (object: object) => api.post(Api.Code_Table_Fuzzy_Query, object);
+  //管理员
+  Floormanagement = '/admin/floor',
+  DormitoryInfo = '/admin/dormitoryInfo',
+}
+
+//用户登录
+//登录
+export const login = (object: object) => api.post<GetAccountInfoModel>(Api.Login, object);
+//修改密码
+export const updata = (object: object) => api.put<updataModel>(Api.Updata, object);
+
+//管理员
+//楼层管理
+export const floormanagement = (dormitory: number) => api.get<floormanagements>(Api.Floormanagement, { params: { dormitory: dormitory } });
+//宿舍基本信息
+export const dormitoryInfos = (object: object) => api.post<DormitoryInfos>(Api.DormitoryInfo, object);

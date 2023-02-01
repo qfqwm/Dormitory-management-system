@@ -28,18 +28,72 @@ export const useStore = defineStore('main', {
   },
 });
 
+// export const mainStore = defineStore('main', {
+//   state: () => {
+//     return {
+//       userInfo: {},
+//     };
+//   },
+
+//   actions: {
+//     setUserInfo(uInfo: any) {
+//       this.$state.userInfo = uInfo;
+//     },
+//   },
+
+//   getters: {},
+// });
+
 export const mainStore = defineStore('main', {
+  /**
+   * 类似组件的 data, 用于存储全局的的状态
+   * 注意:
+   *    1.必须是函数, 为了在服务端渲染的时候避免交叉请求导致的数据交叉污染
+   *    2.必须是箭头函数, 为了更好的 TS 类型推导
+   */
   state: () => {
     return {
-      userInfo: {},
+      // dates: {
+      //   name: '',
+      //   account: '',
+      //   password: '',
+      //   phone: '',
+      //   roomId: '',
+      //   checkTime: '',
+      //   menuList: [],
+      //   role: '',
+      // },
+      total_date: {
+        checkTime: '',
+        menuList: [],
+        name: '',
+        password: '',
+        phone: '',
+        role: '',
+        roomId: '',
+        username: '',
+      },
     };
   },
-
-  actions: {
-    setUserInfo(uInfo: any) {
-      this.$state.userInfo = uInfo;
-    },
-  },
-
+  /**
+   * 类似组件的 computed, 用来封装计算属性, 具有缓存特性
+   */
   getters: {},
+  /**
+   * 类似组件的 methods, 封装业务逻辑, 修改state
+   * 注意: 里面的函数不能定义成箭头函数(函数体中会用到this)
+   */
+  actions: {
+    changeState(num: object): void {
+      // this访问当前容器的实例
+      this.$state.total_date = num;
+    },
+    // changeState1(num: string): void {
+    //   // this访问当前容器的实例
+    //   this.$state.dates.description = num;
+    // },
+  },
+  persist: {
+    enabled: true, // 开启数据缓存
+  },
 });

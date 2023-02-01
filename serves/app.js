@@ -48,10 +48,13 @@ app.use(cors());
 //   res.send({ code: 1, message: err.message });
 // });
 
-//test
-//应用级别
+//应用级别（用户登录）
 const userRouter = require("./router/user");
 app.use("/user", userRouter);
+
+//管理员相关操作
+const adminRouter = require("./router/admin");
+app.use("/admin", adminRouter);
 
 app.listen(80, () => {
   console.log("服务器启动!");
