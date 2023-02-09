@@ -14,3 +14,23 @@ export const formateDate = (date: any) => {
   const week = '星期' + '日一二三四五六'.charAt(time.getDay());
   return `${year}年${month}月${day}日 ${week} ${hour}:${minute}:${second}`;
 };
+
+export const formateDates = (date: any) => {
+  const time = new Date(date);
+  const year = time.getFullYear();
+  const month = complement(time.getMonth() + 1);
+  const day = complement(time.getDate());
+  const hour = complement(time.getHours());
+  const minute = complement(time.getMinutes());
+  const second = complement(time.getSeconds());
+  // const week = '星期' + '日一二三四五六'.charAt(time.getDay());
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+};
+
+export const formateDate_data = (date: any) => {
+  const time = new Date(date);
+  const year = time.getFullYear();
+  const month = complement(time.getMonth() + 1);
+  const day = complement(time.getDate());
+  return `${year}-${month}-${day}`;
+};

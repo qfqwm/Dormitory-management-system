@@ -37,7 +37,7 @@
             <a-button type="primary" shape="round" @click="getdata">检索宿舍</a-button>
           </div>
         </div>
-        <div class="top_2_3">
+        <div v-if="appra" class="top_2_3">
           <div class="top_2_1">
             <div>
               <home-outlined :style="{ fontSize: '100px', color: '#08c' }" />
@@ -77,43 +77,32 @@
         </div>
       </div>
     </div>
-    <div class="footer">
+    <div v-if="lowdata.lengths != 0" class="footer">
       <h2>宿舍成员</h2>
       <div class="footer_2">
         <a-table :columns="columns" :data-source="dataSource" :style="{ width: '100%' }" :pagination="false">
-          <!-- <template #headerCell="{ column }">
-            <template v-if="column.key === 'name'">
-              <span>姓名</span>
-            </template>
-          </template> -->
-
           <template #bodyCell="{ column, record }">
             <template v-if="column.key === 'name'">
               <a>
                 {{ record.name }}
               </a>
             </template>
-            <!-- <template v-if="column.key === 'room'">
-              <a>
-                {{ record.room }}
-              </a>
-            </template> -->
           </template>
         </a-table>
       </div>
     </div>
-    <div class="last">
+    <div v-if="lowdata.lengths != 0" class="last">
       <h2>宿舍评价</h2>
       <div class="last_1">
         <div class="last_1_1">
           <a-form class="ss" :model="formState" name="basic" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }" autocomplete="off" @finish="onFinish">
-            <a-form-item label="宿舍评价" name="username" :rules="[{ required: true, message: 'Please input your username!' }]">
-              <a-input v-model:value="formState.username" />
+            <a-form-item label="宿舍评价" name="note" :rules="[{ required: true, message: 'Please input your username!' }]">
+              <a-input v-model:value="formState.note" />
             </a-form-item>
 
-            <a-form-item label="评分" name="password" :rules="[{ required: true, message: 'Please input your password!' }]">
+            <a-form-item label="评分" name="score" :rules="[{ required: true, message: 'Please input your password!' }]">
               <!-- <a-input-password v-model:value="formState.password" /> -->
-              <a-input-number v-model:value="formState.password" :min="1" :max="100" />
+              <a-input-number v-model:value="formState.score" :min="1" :max="100" />
             </a-form-item>
 
             <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
@@ -122,49 +111,35 @@
           </a-form>
         </div>
         <div class="last_1_2">
-          <div class="last_1_2_1">
-            <div class="last_1_2_1_1">
-              <div>评价分数：99</div>
-              <div>优秀</div>
+          <div v-for="(item, index) in appraiseinfo" :key="index" class="last_1_2_1">
+            <div class="last_1_2_1_1" :style="{ 'background-color': item.score < 60 ? 'red' : item.score < 90 ? 'green' : 'blue' }">
+              <div>评价分数：{{ item.score }}</div>
+              <div>{{ item.score < 60 ? '不及格' : item.score < 90 ? '及格' : '优秀' }}</div>
             </div>
             <div class="last_1_2_1_2">
-              <div>评价：宿舍不错</div>
+              <div>评价：{{ item.note }}</div>
               <div class="last_1_2_1_2_1">
-                <div>评价人：秦</div>
-                <div>2022年12月29日17:24</div>
+                <div>评价人：{{ item.creator }}</div>
+                <div>{{ item.subtime }}</div>
               </div>
             </div>
           </div>
-          <div class="last_1_2_1">
-            <div class="last_1_2_1_1">
-              <div>评价分数：99</div>
-              <div>优秀</div>
-            </div>
-            <div class="last_1_2_1_2">
-              <div>评价：宿舍不错</div>
-              <div class="last_1_2_1_2_1">
-                <div>评价人：秦</div>
-                <div>2022年12月29日17:24</div>
-              </div>
-            </div>
-          </div>
-          <div class="last_1_2_1"> asd </div>
-          <div class="last_1_2_1"> asd </div>
-          <div class="last_1_2_1"> asd </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-  import { formateDate } from '@/layout/time';
+  import { formateDates } from '@/layout/time';
   import { ref, onMounted, reactive, Ref } from 'vue';
-  import { floormanagement, dormitoryInfos } from '../../api/test/index';
+  import { floormanagement, dormitoryInfos, appraise } from '../../api/test/index';
   import { HomeOutlined, DeploymentUnitOutlined, DatabaseOutlined, UserDeleteOutlined } from '@ant-design/icons-vue';
+  import { message } from 'ant-design-vue';
+  // import emitter from '@/utils/bus';
   const nowTime = ref('');
   onMounted(() => {
     setInterval(() => {
-      nowTime.value = formateDate(new Date());
+      nowTime.value = formateDates(new Date());
     });
   });
 
@@ -175,8 +150,7 @@
   const test = ref<any>([]);
   const roomId = ref('');
   //选择宿舍楼
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
+  const handleChange = () => {
     value2.value = '';
     value3.value = '';
     test.value = [];
@@ -193,15 +167,14 @@
   //选择楼层
   const handleChange2 = (value: string) => {
     value3.value = '';
-    test.value.forEach((item: any, index: any) => {
+    test.value.forEach((item: any) => {
       // console.log(item, value, index, 'asd');
-      if (value == index + 1) {
+      if (value == item[0].slice(0, 1)) {
         roomId.value = item;
       }
     });
   };
   //检索宿舍情况
-  // const info = reactive({ dormitory: 1, roomId: 101 });
   const info = reactive({
     dormitory: '',
     roomId: '',
@@ -213,20 +186,36 @@
     phone: string;
     checkTime: string;
   }
+  interface DataItems {
+    score: number;
+    note: string;
+    creator: string;
+    subtime: any;
+  }
   const dataSource: Ref<DataItem[]> = ref([]);
+  const appraiseinfo: Ref<DataItems[]> = ref([]);
+  const appra = ref(false);
   const lowdata = reactive({ roomId: '', floorId: '', buildingId: '', lengths: 0 });
+  //获取详情数据
   const getdata = () => {
     info.dormitory = value1.value;
     info.roomId = value3.value;
+    formState.dormitory = Number(value1.value);
+    formState.roomId = Number(value3.value);
     // console.log(info);
     dormitoryInfos(info).then((res: any) => {
-      console.log(res.data.message);
-      dataSource.value = res.data.message;
+      console.log(res.data.message, 'asda');
+      dataSource.value = res.data.message[0];
+      res.data.message[1].forEach((item: any) => {
+        item.subtime = formateDates(item.subtime);
+      });
+      appraiseinfo.value = res.data.message[1];
       lowdata.lengths = dataSource.value.length;
     });
     lowdata.roomId = value3.value;
     lowdata.floorId = value2.value;
     lowdata.buildingId = '和园' + value1.value + '号';
+    appra.value = true;
   };
 
   const columns = [
@@ -253,16 +242,34 @@
   ];
 
   interface FormState {
-    username: string;
-    password: string;
+    dormitory: number;
+    roomId: number;
+    creator: string;
+    note: string;
+    score?: string;
+    subtime: any;
   }
 
   const formState = reactive<FormState>({
-    username: '',
-    password: '',
+    dormitory: 0,
+    roomId: 0,
+    creator: '',
+    note: '',
+    subtime: '',
   });
+  //提交评价
   const onFinish = (values: any) => {
+    formState.creator = '管理员';
+    formState.subtime = nowTime.value;
     console.log('Success:', values);
+    appraise(formState).then((res: any) => {
+      if (res.data.code == 200) {
+        message.success(res.data.message);
+      }
+    });
+    getdata();
+    formState.note = '';
+    formState.score = '';
   };
 </script>
 <style lang="less" scoped>

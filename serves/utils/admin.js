@@ -6,7 +6,7 @@ const joi = require("joi");
 // const size = joi.number().integer().required();
 
 //楼层管理
-const dormitory = joi.number();
+const dormitory = joi.number().required();
 exports.adminCheck = {
   query: {
     dormitory
@@ -14,7 +14,7 @@ exports.adminCheck = {
 };
 
 //宿舍基本信息（宿舍楼）
-const roomId = joi.number();
+const roomId = joi.number().required();
 exports.dormitoryInfoCheck = {
   body: {
     dormitory,
@@ -22,6 +22,21 @@ exports.dormitoryInfoCheck = {
   },
 };
 
+//提交宿舍评价
+const creator = joi.string();
+const score = joi.number().min(0).max(100);
+const note = joi.string();
+const subtime = joi.any();
+exports.appraiseCheck = {
+  body: {
+    dormitory,
+    roomId,
+    creator,
+    score,
+    note,
+    subtime,
+  },
+};
 
 // 课程修改参数的校验规则
 // const title = joi.string();

@@ -1,3 +1,5 @@
+import { Data } from 'ant-design-vue/lib/_util/type';
+
 export interface GetAccountInfoModel {
   username: string;
   password: string;
@@ -17,4 +19,13 @@ export interface floormanagements {
 export interface DormitoryInfos {
   dormitory: number;
   roomId: number;
+}
+
+export interface Appraises {
+  dormitory: number;
+  roomId: number;
+  creator: string;
+  score: number;
+  note: string;
+  subtime: any;
 }
