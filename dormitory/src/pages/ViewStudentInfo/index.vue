@@ -174,7 +174,7 @@
     info.roomId = value3.value;
     dormitoryInfos(info).then((res: any) => {
       res.data.message[0].forEach((item: any) => {
-        user.value.push(item.username);
+        user.value.push(item.name);
       });
       dataSource.value = res.data.message[0];
     });
@@ -186,7 +186,7 @@
   const switchs = ref(false);
   const getdata = () => {
     dataSource.value.forEach((item: any) => {
-      if (item.username == value4.value) {
+      if (item.name == value4.value) {
         item.checkTime = formateDate_data(item.checkTime);
         Object.keys(datainfo).forEach(function (key) {
           datainfo[key] = item[key];

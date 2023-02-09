@@ -3,12 +3,9 @@ const db = require("../config/db");
 //查询楼层信息逻辑
 exports.FloorManagement = (req, res) => {
     let { dormitory } = req.query
-    // console.log(dormitory);
     const floors = "select * from floors where buildingId=? order by number"
-    // const rooms = "select floorId,number from rooms where buildingId=? and floorId=?";
     const rooms = "select floorId,group_concat(distinct number) as number from rooms where buildingId=? and floorId=? order by floorId"
     const val = []
-    // let list = []
     db.query(floors, dormitory, (err, results) => {
         // 错误返回日志
         if (err) {
@@ -41,9 +38,7 @@ exports.FloorManagement = (req, res) => {
 exports.DormitoryInfo = (req, res) => {
     console.log(req.body);
     let { dormitory, roomId } = req.body
-    console.log(dormitory, roomId);
-    // username,name,phone,password,role,roomId,checkTime,buildingId,studentId,creator,score,note,subtime
-    // const dormitorys = "select users.username,users.name,users.phone,users.password,users.role,users.roomId,users.checkTime,users.buildingId,users.studentId,evaluate.creator,evaluate.score,evaluate.note,evaluate.subtime from users,evaluate where users.buildingId=? and users.roomId=? and users.buildingId=evaluate.buildingId and users.roomId=evaluate.roomId"
+    // console.log(dormitory, roomId);
     const dormitorys = "select username,name,phone,password,role,roomId,checkTime,buildingId,studentId from users where buildingId=? and roomId=?"
     const getappraise = "select creator,score,note,subtime from evaluate where buildingId=? and roomId=? order by subtime desc limit 6"
     const data = []
@@ -68,7 +63,7 @@ exports.DormitoryInfo = (req, res) => {
 exports.AppraiseCheck = (req, res) => {
     console.log(req.body);
     let { dormitory, roomId, creator, score, note, subtime } = req.body
-    console.log(dormitory, roomId, creator, score, note, subtime);
+    // console.log(dormitory, roomId, creator, score, note, subtime);
     const appraiseChecks = "insert into evaluate (buildingId,roomId,creator,score,note,subtime) values (?,?,?,?,?,?)"
     db.query(appraiseChecks, [dormitory, roomId, creator, score, note, subtime], (err, results) => {
         // 错误返回日志
@@ -78,5 +73,19 @@ exports.AppraiseCheck = (req, res) => {
         if(results.affectedRows!=0){
             res.send({ code: 200, message: '添加成功！' });
         }
+    })
+}
+
+//学生早起记录
+exports.Early = (req, res) => {
+    let { userId } = req.query
+    console.log(userId);
+    const earlyChecks = "select name,userId,building,floorId,roomId,data,time from getup_records where userId=?"
+    db.query(earlyChecks, userId, (err, results) => {
+        // 错误返回日志
+        if (err) {
+            return res.send({ code: 2001, message: err.message });
+        }
+        res.send({ code: 200, message: results });
     })
 }

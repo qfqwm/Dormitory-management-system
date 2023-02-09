@@ -38,6 +38,14 @@ exports.appraiseCheck = {
   },
 };
 
+//学生早起记录
+const userId = joi.number().required();
+exports.earlyCheck ={
+  query: {
+    userId
+  },
+}
+
 // 课程修改参数的校验规则
 // const title = joi.string();
 // const price = joi.number();

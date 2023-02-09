@@ -1,6 +1,6 @@
 // todo 实现封装一个axios
 import api from '@/utils/axios';
-import { GetAccountInfoModel, updataModel, floormanagements, DormitoryInfos, Appraises } from './model';
+import { GetAccountInfoModel, updataModel, floormanagements, DormitoryInfos, Appraises, Earlys } from './model';
 
 enum Api {
   // 用户登录
@@ -11,6 +11,7 @@ enum Api {
   Floormanagement = '/admin/floor',
   DormitoryInfo = '/admin/dormitoryInfo',
   Appraise = '/admin/appraise',
+  Early = '/admin/early',
 }
 
 //用户登录
@@ -26,3 +27,5 @@ export const floormanagement = (dormitory: number) => api.get<floormanagements>(
 export const dormitoryInfos = (object: object) => api.post<DormitoryInfos>(Api.DormitoryInfo, object);
 //提交评价
 export const appraise = (object: object) => api.post<Appraises>(Api.Appraise, object);
+//查看学生早起记录
+export const early = (userId: number) => api.get<Earlys>(Api.Early, { params: { userId: userId } });

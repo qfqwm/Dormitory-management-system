@@ -29,3 +29,7 @@ export interface Appraises {
   note: string;
   subtime: any;
 }
+
+export interface Earlys {
+  userId: number;
+}
