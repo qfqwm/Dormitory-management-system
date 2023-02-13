@@ -40,27 +40,11 @@ exports.appraiseCheck = {
 
 //学生早起记录
 const userId = joi.number().required();
+// const start = joi
 exports.earlyCheck ={
   query: {
-    userId
+    // starat,
+    userId,
+    // end
   },
 }
-
-// 课程修改参数的校验规则
-// const title = joi.string();
-// const price = joi.number();
-// const id = joi.number().integer().required();
-// exports.updateCourseCheck = {
-//   query: {
-//     title,
-//     price,
-//     id,
-//   },
-// };
-
-// 课程删除参数校验规则
-// exports.deleteCourseCheck = {
-//   query: {
-//     id,
-//   },
-// };

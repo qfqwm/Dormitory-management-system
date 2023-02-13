@@ -77,7 +77,9 @@
   import { formateDate_data } from '@/layout/time';
   import { Ref, ref } from 'vue';
   import { floormanagement, dormitoryInfos, early } from '../../api/test/index';
+  import { DataItem } from '@/layout/admin';
   import type { Dayjs } from 'dayjs';
+  import { columns } from '@/layout/column';
   type RangeValue = [Dayjs, Dayjs];
   const value5 = ref<RangeValue>();
 
@@ -146,12 +148,6 @@
   };
 
   //搜索结果
-  interface DataItem {
-    name: string;
-    username: string;
-    phone: string;
-    checkTime: string;
-  }
   const userId = ref();
   const switchs = ref(false);
   const dataSource: Ref<DataItem[]> = ref([]);
@@ -161,120 +157,15 @@
         item.data = formateDate_data(item.data);
       });
       dataSource.value = res.data.message;
-      switchs.value = true;
+      if (dataSource.value.length != 0) {
+        switchs.value = true;
+      }
       if (dataSource.value.length == 0) {
         switchs.value = false;
       }
     });
   };
-
-  const columns = [
-    {
-      title: '姓名',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: '学号',
-      dataIndex: 'userId',
-      key: 'userId',
-    },
-    {
-      title: '宿舍楼',
-      dataIndex: 'building',
-      key: 'building',
-    },
-    {
-      title: '楼层',
-      key: 'floorId',
-      dataIndex: 'floorId',
-    },
-    {
-      title: '宿舍号',
-      key: 'roomId',
-      dataIndex: 'roomId',
-    },
-    {
-      title: '日期',
-      key: 'data',
-      dataIndex: 'data',
-    },
-    {
-      title: '时间',
-      key: 'time',
-      dataIndex: 'time',
-    },
-    {
-      title: '是否早起',
-      key: 'checkTime',
-    },
-  ];
 </script>
 <style lang="less" scoped>
-  .all::-webkit-scrollbar {
-    display: none;
-  }
-  .all {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-
-    .top {
-      width: 100%;
-      height: 15%;
-      margin: 0 0 20px 0;
-      //   background-color: red;
-
-      span {
-        font-weight: 550;
-        margin: 10px 20px 0 10px;
-        font-size: 30px;
-      }
-
-      .top_2 {
-        display: flex;
-        width: 100%;
-        height: 96%;
-        margin: 10px 0 0 0;
-        flex-direction: column;
-
-        .top_2_2 {
-          display: flex;
-          height: 60%;
-          padding: 0 10px;
-          justify-content: space-between;
-          align-items: center;
-          background-color: white;
-
-          .top_2_2_1 {
-            width: 80%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-direction: row;
-          }
-        }
-      }
-    }
-    .footer {
-      width: 100%;
-      height: 85%;
-      //   background-color: red;
-
-      h2 {
-        font-weight: 550;
-        margin: 10px 0 0 10px;
-        font-size: 30px;
-      }
-
-      .footer_2 {
-        display: flex;
-        width: 100%;
-        height: 85%;
-        margin: 10px 0 0 0;
-        // background-color: red;
-      }
-    }
-  }
+  @import './index.less';
 </style>

@@ -119,6 +119,7 @@
   import { formateDate_data } from '@/layout/time';
   import { Ref, ref } from 'vue';
   import { floormanagement, dormitoryInfos } from '../../api/test/index';
+  import { DataItem } from '@/layout/admin';
   import { HomeOutlined, DeploymentUnitOutlined, DatabaseOutlined, UserDeleteOutlined } from '@ant-design/icons-vue';
 
   const value1 = ref('');
@@ -155,12 +156,6 @@
   };
 
   //选择房间
-  interface DataItem {
-    name: string;
-    username: string;
-    phone: string;
-    checkTime: string;
-  }
   const info = reactive({
     dormitory: '',
     roomId: '',
@@ -199,175 +194,5 @@
   };
 </script>
 <style lang="less" scoped>
-  .all {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-
-    .top {
-      width: 100%;
-      height: 20%;
-      margin: 0 0 20px 0;
-      //   background-color: gray;
-
-      span {
-        font-weight: 550;
-        margin: 10px 20px 0 10px;
-        font-size: 30px;
-      }
-
-      .top_2 {
-        display: flex;
-        width: 100%;
-        height: 95%;
-        margin: 10px 0 0 0;
-        flex-direction: column;
-
-        .top_2_2 {
-          display: flex;
-          height: 72%;
-          padding: 0 10px;
-          justify-content: space-between;
-          align-items: center;
-          background-color: white;
-
-          .top_2_2_1 {
-            width: 70%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-direction: row;
-          }
-        }
-
-        .top_2_3 {
-          height: 63%;
-          display: flex;
-          margin: 20px 0 0 0;
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
-
-          .top_2_1 {
-            display: flex;
-            width: 23%;
-            height: 90%;
-            background-color: white;
-            flex-direction: row;
-            justify-content: space-evenly;
-            align-items: center;
-
-            .top_2_1_1 {
-              font-size: 20px;
-              color: gray;
-            }
-
-            .top_2_1_2 {
-              font-size: 25px;
-              font-weight: 550;
-            }
-          }
-        }
-      }
-    }
-
-    .footer {
-      width: 100%;
-      height: 90%;
-      //   background-color: black;
-
-      h2 {
-        font-weight: 550;
-        margin: 10px 0 0 10px;
-        font-size: 30px;
-      }
-
-      .footer_2 {
-        display: flex;
-        width: 100%;
-        height: 91%;
-        margin: 10px 0 0 0;
-        flex-direction: column;
-        // background-color: red;
-
-        .footer_2_1 {
-          display: flex;
-          width: 100%;
-          height: 48%;
-          //   background-color: black;
-          justify-content: space-between;
-
-          .footer_2_1_1 {
-            width: 49%;
-            //   margin: 10px 0 0 0;
-            background-color: white;
-
-            h2 {
-              font-size: 20px;
-              color: blue;
-              margin: 20px;
-            }
-
-            hr {
-              width: 95%;
-            }
-
-            p {
-              color: gray;
-              margin: 30px;
-              font-weight: 550;
-
-              span {
-                color: rgb(24, 24, 24);
-              }
-            }
-          }
-
-          .footer_2_1_2 {
-            display: flex;
-            width: 49%;
-            background-color: white;
-            flex-direction: row;
-            flex-wrap: wrap;
-            align-content: space-around;
-            justify-content: space-around;
-
-            .top_2_1 {
-              display: flex;
-              width: 45%;
-              height: 45%;
-              //   background-color: white;
-              flex-direction: row;
-              justify-content: space-evenly;
-              align-items: center;
-              border-style: ridge;
-              box-shadow: 2px 2px 2px 2px pink;
-
-              .top_2_1_1 {
-                font-size: 20px;
-                color: gray;
-              }
-
-              .top_2_1_2 {
-                font-size: 25px;
-                font-weight: 550;
-              }
-            }
-          }
-        }
-
-        .footer_2_2 {
-          width: 100%;
-          height: 49%;
-          margin: 20px 0 0 0;
-          background-color: white;
-
-          p {
-            margin: 50px 20px;
-          }
-        }
-      }
-    }
-  }
+  @import './index.less';
 </style>

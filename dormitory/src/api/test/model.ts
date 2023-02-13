@@ -1,4 +1,4 @@
-import { Data } from 'ant-design-vue/lib/_util/type';
+// import { Data } from 'ant-design-vue/lib/_util/type';
 
 export interface GetAccountInfoModel {
   username: string;
