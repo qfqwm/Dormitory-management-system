@@ -48,3 +48,12 @@ exports.earlyCheck ={
     // end
   },
 }
+
+//学生各个方面的概率
+exports.probability ={
+  query: {
+    // starat,
+    userId,
+    // end
+  },
+}

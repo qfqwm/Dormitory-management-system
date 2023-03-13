@@ -154,6 +154,8 @@
         item.data = formateDate_data(item.data);
       });
       dataSource.value = res.data.message;
+      console.log(dataSource.value);
+
       if (dataSource.value.length != 0) {
         switchs.value = true;
       }

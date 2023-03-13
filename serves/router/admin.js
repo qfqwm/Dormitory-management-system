@@ -3,7 +3,7 @@ const router = express.Router();
 const adminController = require("../controllers/adminController");
 const expressJoi = require("@escook/express-joi");
 // 这里注意导出的方式对应相对应的引入方式
-const { adminCheck, dormitoryInfoCheck, appraiseCheck,earlyCheck } = require("../utils/admin");
+const { adminCheck, dormitoryInfoCheck, appraiseCheck,earlyCheck,probabilityCheck } = require("../utils/admin");
 
 //概览
 router.get("/overview", expressJoi(adminCheck), adminController.Overview);
@@ -19,5 +19,7 @@ router.get("/early", expressJoi(earlyCheck), adminController.Early);
 router.get("/late", expressJoi(earlyCheck), adminController.Late);
 //学生打扫记录
 router.get("/sweep", expressJoi(earlyCheck), adminController.Sweep);
+//学生各个方面的概率
+router.get("/probability", expressJoi(probabilityCheck), adminController.Probability);
 
 module.exports = router;

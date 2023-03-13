@@ -79,6 +79,7 @@ exports.DormitoryInfo = (req, res) => {
                 return res.send({ code: 2001, message: err.message });
             }
             data.push(result)
+            console.log(data);
             res.send({ code: 200, message: data });
         })     
     })
@@ -131,6 +132,20 @@ exports.Late = (req, res) => {
 
 //学生打扫记录
 exports.Sweep = (req, res) => {
+    let { userId } = req.query
+    // console.log(userId);
+    const earlyChecks = "select name,userId,building,floorId,roomId,data,time from back_records where userId=?"
+    db.query(earlyChecks, userId, (err, results) => {
+        // 错误返回日志
+        if (err) {
+            return res.send({ code: 2001, message: err.message });
+        }
+        res.send({ code: 200, message: results });
+    })
+}
+
+//学生各个方面的概率
+exports.Probability = (req, res) => {
     let { userId } = req.query
     // console.log(userId);
     const earlyChecks = "select name,userId,building,floorId,roomId,data,time from back_records where userId=?"
