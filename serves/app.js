@@ -9,7 +9,9 @@ app.use(express.json()) //post参数-{name:"",age:100}
 
 // 配置跨域请求
 const cors = require("cors");
-app.use(cors());
+app.use(cors({
+  origin:['http://localhost:3200']
+}));
 
 // 解析token校验是否正确、哪些接口需要token校验
 // const expressJwt = require("express-jwt");

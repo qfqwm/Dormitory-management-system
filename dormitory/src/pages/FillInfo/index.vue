@@ -7,55 +7,77 @@
       ></image> -->
       <div class="left"><img class="header-img" src="../../assets/22.jpg" alt="找不到图片" /></div>
       <div class="right">
-        <p>张明</p>
-        <p>用户信息填写</p>
+        <p>{{ name }}</p>
+        <!-- <p>用户信息填写</p> -->
       </div>
     </div>
     <div class="footer">
-      <h2>用户指南</h2><hr />
+      <h2>用户个人信息</h2><hr />
       <a-form class="form" :model="formState" name="basic" :label-col="{ span: 8 }" :wrapper-col="{ span: 10 }" autocomplete="off" @finish="onFinish">
-        <a-form-item label="学生姓名" name="username" :rules="[{ required: true, message: 'Please input your username!' }]">
-          <a-input v-model:value="formState.username" />
+        <a-form-item label="学生姓名" name="name">
+          <a-input v-model:value="formState.name" disabled="disabled" />
         </a-form-item>
 
-        <a-form-item label="联系电话" name="phone" :rules="[{ required: true, message: 'Please input your Phone!' }]">
-          <a-input v-model:value="formState.phone" />
+        <a-form-item label="联系电话" name="phone">
+          <a-input v-model:value="formState.phone" disabled="disabled" />
         </a-form-item>
 
-        <a-form-item label="选择想要入住的寝室" name="password" :rules="[{ required: true, message: 'Please input your password!' }]">
-          <a-input-password v-model:value="formState.password" />
+        <a-form-item label="学号" name="password">
+          <a-input v-model:value="formState.studentId" disabled="disabled" />
         </a-form-item>
 
-        <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+        <a-form-item label="入住时间" name="checkTime">
+          <a-input v-model:value="formState.checkTime" disabled="disabled" />
+        </a-form-item>
+
+        <!-- <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
           <a-button type="primary" html-type="submit">提交信息</a-button>
-        </a-form-item>
+        </a-form-item> -->
       </a-form>
     </div>
   </div>
 </template>
 <script setup lang="ts">
+  import { mainStore } from '@/store';
+  const mainStoreI = mainStore();
+  const name = ref('');
+  onMounted(() => {
+    name.value = mainStoreI.$state.total_date.name;
+    Object.keys(formState).map(key => {
+      formState[key] = mainStoreI.total_date[key];
+    });
+  });
+
   //修改密码（表单验证）
   interface FormState {
-    username: string;
+    name: string;
     password: string;
-    newpassword: string;
+    studentId: string;
     phone: string;
+    checkTime: string;
   }
   const formState = reactive<FormState>({
-    username: '',
+    name: '',
     password: '',
-    newpassword: '',
+    studentId: '',
     phone: '',
+    checkTime: '',
   });
   const onFinish = (values: any) => {
     console.log('Success:', values);
   };
 </script>
 <style lang="less" scoped>
+  .all::-webkit-scrollbar {
+    display: none;
+  }
   .all {
     display: flex;
+    overflow: hidden; // 隐藏超出部分
+    overflow-y: scroll;
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    max-height: 100%; // 你可以设置固定或者最大最小高度
     flex-direction: column;
 
     .top {
@@ -93,7 +115,7 @@
 
     .footer {
       width: 100%;
-      height: 68%;
+      // height: 68%;
       background-color: white;
       margin: 20px 0 0 0;
 
