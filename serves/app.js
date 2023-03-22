@@ -9,9 +9,10 @@ app.use(express.json()) //post参数-{name:"",age:100}
 
 // 配置跨域请求
 const cors = require("cors");
-app.use(cors({
-  origin:['http://localhost:3200']
-}));
+app.use(cors())
+// app.use(cors({
+//   origin:['http://localhost:3200/']
+// }));
 
 // 解析token校验是否正确、哪些接口需要token校验
 // const expressJwt = require("express-jwt");
@@ -58,6 +59,6 @@ app.use("/user", userRouter);
 const adminRouter = require("./router/admin");
 app.use("/admin", adminRouter);
 
-app.listen(80, () => {
+app.listen(3000, () => {
   console.log("服务器启动!");
 });

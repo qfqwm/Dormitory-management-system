@@ -218,7 +218,7 @@
             width: 80%;
             height: 90%;
             margin: 15px 15px 0 0;
-            flex-direction: row;
+            flex-direction: column;
             flex-wrap: wrap;
             justify-content: space-between;
             align-content: space-around;

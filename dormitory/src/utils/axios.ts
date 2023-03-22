@@ -4,7 +4,7 @@ import axios from 'axios';
 // import router from '@/router';
 const api = axios.create({
   //服务器
-  baseURL: 'http://127.0.0.1',
+  baseURL: 'http://localhost:3000/',
 });
 
 // // 添加请求拦截器

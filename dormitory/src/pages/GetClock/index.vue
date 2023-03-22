@@ -4,7 +4,7 @@
       <h2>个人记录</h2>
       <div class="top_2">
         <div class="left">
-          <a-button type="text" shape="circle" class="cri"
+          <a-button type="text" shape="circle" class="cri" @click="gettime"
             ><p>今日打卡</p>
             {{ nowTime }}
           </a-button>
@@ -54,6 +54,11 @@
     const myChart = echarts.init(document.getElementById('myChart'), 'light'); // 初始化echarts, theme为light
     myChart.setOption(echartsOption); // echarts设置选项
   });
+
+  //获取打卡时间
+  const gettime = () => {
+    console.log(nowTime.value, 'asd');
+  };
 
   const value1 = ref('Yiminghe');
   const handleChange = (value: string) => {
@@ -192,7 +197,7 @@
             width: 80%;
             height: 90%;
             margin: 15px 15px 0 0;
-            flex-direction: row;
+            flex-direction: column;
             flex-wrap: wrap;
             justify-content: space-between;
             align-content: space-around;
